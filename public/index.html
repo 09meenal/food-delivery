@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FoodDash | Food Ordering System</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--or:#f97316;--line:#e8e8e8;--g:#1b7a1b;--b:#8a2b0b}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.6 Poppins,system-ui,sans-serif;color:#222;background:#fff;padding-bottom:70px}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 8%;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:5}
+.logo{font:800 26px Poppins,sans-serif;color:#c1121f;cursor:pointer}.logo span{color:#111}
+header a{margin-left:34px;font-weight:500;cursor:pointer}header a:hover{color:var(--or)}
+.hero{background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.75)),#222;color:#fff;padding:40px 8%}
+.hero h1{margin:0 0 16px;font-size:30px;font-weight:600}.sbox{display:flex;gap:8px;max-width:580px}
+input,textarea{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:4px;width:100%;color:#222}
+input[type=radio]{width:auto;margin-right:8px}
+label.f{display:block;margin:14px 0 4px;font-weight:500}
+.ob{background:var(--or);color:#fff;border:0;padding:9px 18px;font:inherit;font-weight:500;cursor:pointer;border-radius:3px}
+.ob:hover{background:#e56a0a}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+.sec{padding:36px 8%}
+h2.t{font-size:32px;font-weight:600;margin:0 0 6px}h2.t span{color:var(--or)}.bar{width:70px;height:3px;background:#111;margin-bottom:26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+.card{border:1px solid var(--line);padding:14px;background:#fff}
+.img{height:190px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:76px}
+.card h3{font-size:17px;font-weight:600;margin:12px 0 6px}
+.row{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.vn{width:26px;height:26px;border:2px solid;display:flex;align-items:center;justify-content:center}.vn i{width:12px;height:12px;border-radius:50%;background:currentColor}
+.act{display:flex;gap:10px;align-items:center}.act .ob{flex:1;border-radius:0;height:38px}
+.step{display:inline-flex;border:1px solid var(--line)}.step button{width:30px;border:0;background:#f4f4f4;cursor:pointer;font:inherit}
+.step b{min-width:36px;text-align:center;font-weight:500;line-height:36px}
+.line{display:grid;grid-template-columns:1fr auto 110px;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);max-width:640px}
+.line span:last-child,.line b:last-child{text-align:right}
+.pay label{display:block;padding:10px 14px;border:1px solid var(--line);margin-bottom:8px;max-width:640px;cursor:pointer}
+.pc{display:inline-flex;gap:18px;align-items:center;text-align:left;border:1px solid var(--line);border-left:4px solid var(--or);padding:16px 26px;margin-top:10px}
+.pc h3{margin:0}.pc p{margin:0}.pc small{color:#777}
+#cb{position:fixed;bottom:0;left:0;right:0;background:var(--or);color:#fff;display:none;justify-content:space-between;padding:14px 8%;cursor:pointer;font-weight:500;z-index:9}
+#msg{position:fixed;top:80px;right:20px;background:#222;color:#fff;padding:10px 16px;border-radius:4px;display:none;z-index:10;max-width:340px}
+.hr{display:flex;align-items:center}.ns{position:relative;width:280px}.ns input{padding:8px 12px;border-radius:20px}
+#dd{display:none;position:absolute;top:44px;left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:20;max-height:320px;overflow:auto}
+.di{display:flex;gap:12px;align-items:center;padding:10px 14px;cursor:pointer}.di:hover{background:#fff4ea}.di span{font-size:26px}.di small{display:block;color:#777;font-size:12px;line-height:1.3}
+@keyframes sp{to{transform:rotate(360deg)}}.spin{width:56px;height:56px;border:6px solid #ffe0c7;border-top-color:var(--or);border-radius:50%;margin:10px auto 22px;animation:sp 1s linear infinite}
+.amt{border:1px solid var(--line);border-left:4px solid var(--or);padding:14px 20px;margin-bottom:20px}.amt h1{margin:0;font-size:38px;color:var(--or)}.amt small{color:#777}
+footer{text-align:center;color:#888;font-size:13px;padding:16px}footer a{color:#888}
+</style></head><body>
+<header><div class="logo" onclick="search()">FOOD<span>DASH</span></div><div class="hr"><div class="ns"><input id="ns" type="search" placeholder="Search restaurants in Mumbai" autocomplete="off"><div id="dd"></div></div><a id="lg" onclick="login()">Login</a></div></header>
+<div id="app"></div>
+<footer>FoodDash, Mumbai &middot; <a href="/admin.html">Admin panel</a></footer>
+<div id="cb" onclick="cartView()"></div><div id="msg"></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let user=null,R=null,after=null,cart={rid:null,rname:'',items:{}};
+try{user=JSON.parse(localStorage.getItem('fd_user'))}catch(e){}
+try{const c=JSON.parse(localStorage.getItem('fd_cart'));if(c&&c.items)cart=c}catch(e){}
+const TINT=['#ffe8d1','#e4f3e1','#fde3e3','#e3ecfb','#f6ecd3'];
+const ICON=[['tikka','🍢'],['biryani','🍛'],['chicken wings','🍗'],['butter chicken','🍗'],['dal','🍲'],['naan','🫓'],['pizza','🍕'],['garlic','🥖'],['burger','🍔'],['fries','🍟'],['wrap','🌯'],['coffee','☕'],['dosa','🥞'],['idli','🍚'],['vada','🍩'],['noodles','🍜'],['rice','🍚'],['manchurian','🥘'],['chilli','🌶️'],['spring','🥟']];
+const emo=n=>(ICON.find(([k])=>n.toLowerCase().includes(k))||[0,'🍽️'])[1];
+const REM={'Spice Route':'🍛','Pizza Palace':'🍕','Burger Barn':'🍔','Dosa Corner':'🥞','Wok Express':'🍜'};
+async function api(u,m='GET',b){const r=await fetch(u,{method:m,headers:{'Content-Type':'application/json'},body:b&&JSON.stringify(b)});const j=await r.json();if(!r.ok)throw new Error(j.error);return j}
+function toast(t){const m=$('#msg');m.textContent=t;m.style.display='block';clearTimeout(m.t);m.t=setTimeout(()=>m.style.display='none',2800)}
+function page(h){$('#app').innerHTML=h;scrollTo(0,0);$('#lg').textContent=user?user.name:'Login'}
+const total=()=>Object.values(cart.items).reduce((a,i)=>a+i.qty*i.price,0);
+function bar(){try{localStorage.setItem('fd_cart',JSON.stringify(cart))}catch(e){}const n=Object.values(cart.items).reduce((a,i)=>a+i.qty,0);$('#cb').style.display=n?'flex':'none';$('#cb').innerHTML=`<span>${n} item${n>1?'s':''} | Rs: ${total()}</span><b>View cart &rarr;</b>`}
+
+async function search(q=''){try{const rs=await api('/api/restaurants?q='+encodeURIComponent(q));
+ page(`<div class="hero"><h1>Order food from the best restaurants in Mumbai</h1><p style="margin:0;opacity:.85">Use the search bar at the top, or pick a restaurant below.</p></div>
+ <div class="sec"><h2 class="t">${q?`Results for <span>"${esc(q)}"</span>`:'Restaurants in <span>Mumbai</span>'}</h2><div class="bar"></div>${rs.length?`<div class="grid">${rs.map(rc).join('')}</div>`:'<p>No restaurants found. Try another search.</p>'}</div>`);}catch(e){page(`<div class="sec"><h2 class="t">Cannot reach the <span>server</span></h2><p>${esc(e.message)}</p></div>`)}}
+const rc=r=>`<div class="card"><div class="img" style="background:${TINT[r.restaurant_id%5]}">${REM[r.name]||'🍽️'}</div><h3>${esc(r.name)}</h3><p style="margin:0 0 12px;font-size:13px;color:#666">📍 ${esc(r.address)}<br>📞 ${esc(r.contact_details)}</p><button class="ob" style="width:100%;height:38px;border-radius:0" onclick="openR(${r.restaurant_id})">View menu</button></div>`;
+
+async function openR(id){try{const d=await api('/api/menu/'+id);R=d;const r=d.restaurant;
+ page(`<div class="sec"><h2 class="t">${esc(r.name)} <span>Menu</span></h2><div class="bar"></div><p style="margin-top:-10px">📍 ${esc(r.address)} &nbsp; 📞 ${esc(r.contact_details)}</p><div class="grid">${d.items.map(dish).join('')}</div></div>`)}catch(e){toast(e.message)}}
+const dish=f=>{const v=f.type==='Veg';return `<div class="card"><div class="img" style="background:${TINT[f.item_id%5]}">${emo(f.item_name)}</div><h3>${esc(f.item_name)}</h3>
+ <div class="row"><span>Rs: ${Number(f.price)}</span><span class="vn" style="color:${v?'var(--g)':'var(--b)'}" title="${v?'Veg':'Non-veg'}"><i></i></span></div>
+ <div class="act"><span class="step"><button onclick="step(${f.item_id},-1)">-</button><b id="qv${f.item_id}">1</b><button onclick="step(${f.item_id},1)">+</button></span><button class="ob" onclick="addCart(${f.item_id})">🛒 Add</button></div></div>`};
+function step(id,d){const e=$('#qv'+id);e.textContent=Math.max(1,+e.textContent+d)}
+function addCart(id){const f=R.items.find(x=>x.item_id===id),rid=R.restaurant.restaurant_id;
+ if(cart.rid&&cart.rid!==rid&&Object.keys(cart.items).length&&!confirm('Your cart has items from another restaurant. Clear it and start a new order?'))return;
+ if(cart.rid!==rid)cart={rid,rname:R.restaurant.name,items:{}};
+ const q=+$('#qv'+id).textContent,old=cart.items[id];cart.items[id]={name:f.item_name,price:Number(f.price),qty:(old?old.qty:0)+q};
+ $('#qv'+id).textContent=1;bar();toast(`${f.item_name} added to cart`)}
+
+function cartView(){const its=Object.entries(cart.items);
+ if(!its.length){page(`<div class="sec"><h2 class="t">Your <span>Cart</span></h2><div class="bar"></div><p>Your cart is empty.</p><button class="ob" onclick="search()">Find restaurants</button></div>`);return}
+ page(`<div class="sec"><h2 class="t">Your <span>Cart</span></h2><div class="bar"></div><p>From <b>${esc(cart.rname)}</b></p>
+ ${its.map(([id,i])=>`<div class="line"><span>${esc(i.name)}</span><span class="step"><button onclick="chg(${id},-1)">-</button><b>${i.qty}</b><button onclick="chg(${id},1)">+</button></span><span>Rs: ${i.qty*i.price}</span></div>`).join('')}
+ <div class="line"><b>Total</b><span></span><b>Rs: ${total()}</b></div>
+ <h3 style="margin-top:26px">Delivering to</h3><p>${user?esc(user.name)+', '+esc(user.address):'Please login to continue.'}</p>
+ <h3>Payment method</h3><div class="pay">${[['COD','Cash on Delivery'],['UPI','UPI (Google Pay, Paytm, PhonePe)']].map((m,i)=>`<label><input type="radio" name="pm" value="${m[0]}" ${i?'':'checked'} onchange="if(user)$('#pb').textContent=this.value==='UPI'?'Proceed to pay':'Place order'">${m[1]}</label>`).join('')}</div>
+ <button id="pb" class="ob" style="margin-top:14px;padding:12px 30px" onclick="place()">${user?'Place order':'Login to order'}</button></div>`)}
+function chg(id,d){const i=cart.items[id];i.qty+=d;if(i.qty<=0)delete cart.items[id];if(!Object.keys(cart.items).length)cart.rid=null;bar();cartView()}
+
+function place(){if(!user){after='cart';login();return}
+ if(document.querySelector('input[name=pm]:checked').value==='UPI')upiPage();else finish('COD')}
+function upiPage(){page(`<div class="sec" style="max-width:520px"><h2 class="t">UPI <span>Payment</span></h2><div class="bar"></div>
+ <div class="amt"><small>Amount to pay</small><h1>Rs: ${total()}</h1><small>FoodDash &middot; order from ${esc(cart.rname)}</small></div>
+ <h3>Choose a UPI app</h3><div class="pay">${['Google Pay','Paytm','PhonePe'].map((a,i)=>`<label><input type="radio" name="ua" value="${a}" ${i?'':'checked'}>${a}</label>`).join('')}</div>
+ <label class="f">Your UPI ID</label><input id="uid" placeholder="yourname@okicici">
+ <button id="pay" class="ob" style="margin-top:18px;width:100%;padding:12px" onclick="payUpi()">Pay Rs: ${total()}</button>
+ <a onclick="cartView()" style="cursor:pointer;color:var(--or);display:inline-block;margin-top:14px">&larr; Back to cart</a></div>`)}
+function payUpi(){const id=$('#uid').value.trim(),app=document.querySelector('input[name=ua]:checked').value;
+ if(!/^[\w.\-]{2,}@[a-zA-Z]{2,}$/.test(id)){toast('Type your full UPI ID, for example rahul@okicici');return}
+ page(`<div class="sec" style="text-align:center"><div class="spin"></div><h2 class="t">Waiting for <span>approval</span></h2><p>Open <b>${esc(app)}</b> and approve the request of <b>Rs: ${total()}</b><br>UPI ID: ${esc(id)}</p></div>`);
+ setTimeout(()=>finish('UPI',app),2800)}
+async function finish(pm,app){
+ const items=Object.entries(cart.items).map(([id,i])=>({item_id:id,quantity:i.qty})),name=cart.rname;
+ try{const r=await api('/api/place-order','POST',{customer_id:user.customer_id,restaurant_id:cart.rid,items,payment_method:pm});
+  cart={rid:null,rname:'',items:{}};bar();
+  page(`<div class="sec" style="text-align:center"><div style="font-size:64px">✅</div><h2 class="t">Your order is <span>placed!</span></h2><div class="bar" style="margin:8px auto 20px"></div>
+  <p>Order #${r.order_id} from <b>${esc(name)}</b><br>Total: Rs: ${Number(r.total)} &middot; ${pm==='COD'?'Pay Rs: '+Number(r.total)+' in cash on delivery':'Paid via UPI ('+esc(app)+')'}<br>Delivering to: ${esc(user.address)}</p>
+  ${r.partner?`<div class="pc"><div style="font-size:44px">🛵</div><div><small>Your delivery partner</small><h3>${esc(r.partner)}</h3><p>📞 ${esc(r.partner_phone)}</p></div></div><p>${esc(r.partner)} will deliver your order.</p>`:'<p>A delivery partner will be assigned shortly.</p>'}
+  <button class="ob" style="margin-top:12px;padding:10px 26px" onclick="search()">Order more</button></div>`)}catch(e){toast(e.message);cartView()}}
+
+function login(){page(`<div class="sec" style="max-width:560px"><h2 class="t"><span>Login</span></h2><div class="bar"></div>
+ <label class="f">Your name</label><input id="ln" value="${esc(user?user.name:'')}" placeholder="e.g. Rahul Sharma">
+ <label class="f">Delivery address</label><textarea id="la" rows="3" placeholder="Flat no, building, area, Mumbai">${esc(user?user.address:'')}</textarea>
+ <button class="ob" style="margin-top:18px;padding:10px 28px" onclick="doLogin()">Login</button>${user?' <button class="ob" style="background:#777" onclick="logout()">Logout</button>':''}</div>`)}
+async function doLogin(){try{user=await api('/api/login','POST',{name:$('#ln').value,address:$('#la').value});
+ try{localStorage.setItem('fd_user',JSON.stringify(user))}catch(e){}
+ toast('Welcome, '+user.name);if(after==='cart'){after=null;cartView()}else search()}catch(e){toast(e.message)}}
+function logout(){user=null;try{localStorage.removeItem('fd_user')}catch(e){}search()}
+const ns=$('#ns'),dd=$('#dd');
+async function suggest(){try{const rs=await api('/api/restaurants?q='+encodeURIComponent(ns.value));
+ dd.innerHTML=rs.length?rs.map(r=>`<div class="di" onclick="pick(${r.restaurant_id})"><span>${REM[r.name]||'🍽️'}</span><div><b>${esc(r.name)}</b><small>${esc(r.address)}</small></div></div>`).join(''):'<div class="di">No restaurants found</div>';dd.style.display='block'}catch(e){}}
+ns.onfocus=ns.oninput=suggest;
+ns.onkeydown=e=>{if(e.key==='Enter'){dd.style.display='none';search(ns.value)}};
+function pick(id){dd.style.display='none';ns.value='';openR(id)}
+document.addEventListener('click',e=>{if(!e.target.closest('.ns'))dd.style.display='none'});
+if(user)api('/api/login','POST',{name:user.name,address:user.address}).then(u=>{user=u;try{localStorage.setItem('fd_user',JSON.stringify(u))}catch(e){}$('#lg').textContent=u.name}).catch(()=>{});
+bar();search();
+</script></body></html>

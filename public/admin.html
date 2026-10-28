@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Food Delivery Admin</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --ink: #16302b;
+      --leaf: #1f6f5b;
+      --saf: #f0a202;
+      --paper: #f6f7f4;
+      --line: #dde3dc;
+      --red: #b3321f
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font: 15px/1.5 Figtree, system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      display: flex;
+      min-height: 100vh
+    }
+
+    h1,
+    h2 {
+      font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+      margin: 0
+    }
+
+    nav {
+      width: 220px;
+      background: var(--ink);
+      color: #e6efe9;
+      padding: 20px 12px;
+      flex-shrink: 0
+    }
+
+    nav h1 {
+      font-size: 22px;
+      color: #fff;
+      padding: 0 8px 16px
+    }
+
+    nav h1 span {
+      color: var(--saf)
+    }
+
+    nav button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: 0;
+      color: inherit;
+      font: inherit;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer
+    }
+
+    nav button:hover {
+      background: #244a42
+    }
+
+    nav button.on {
+      background: var(--saf);
+      color: var(--ink);
+      font-weight: 600
+    }
+
+    nav small {
+      display: block;
+      padding: 14px 8px 4px;
+      opacity: .6
+    }
+
+    main {
+      flex: 1;
+      padding: 28px;
+      min-width: 0
+    }
+
+    .bar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 16px 0;
+      flex-wrap: wrap
+    }
+
+    input,
+    select {
+      font: inherit;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      width: 100%
+    }
+
+    .bar input {
+      width: 260px
+    }
+
+    .btn {
+      font: inherit;
+      font-weight: 600;
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--leaf);
+      color: #fff;
+      cursor: pointer
+    }
+
+    .btn.alt {
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--line)
+    }
+
+    .btn.del {
+      background: #fff;
+      color: var(--red);
+      border: 1px solid var(--line)
+    }
+
+    .btn.sm {
+      padding: 3px 10px;
+      font-weight: 500
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 2px solid var(--saf);
+      outline-offset: 1px
+    }
+
+    .wrap {
+      overflow-x: auto;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%
+    }
+
+    th,
+    td {
+      padding: 9px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap
+    }
+
+    th {
+      background: #eef2ec;
+      font-weight: 600
+    }
+
+    tr:last-child td {
+      border-bottom: 0
+    }
+
+    .acts {
+      display: flex;
+      gap: 6px
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 18px 0 28px;
+      border-top: 3px solid var(--ink)
+    }
+
+    .stats div {
+      flex: 1;
+      min-width: 140px;
+      padding: 14px 16px 0 0
+    }
+
+    .stats b {
+      display: block;
+      font: 700 34px 'Bricolage Grotesque', sans-serif
+    }
+
+    dialog {
+      border: 0;
+      border-radius: 10px;
+      padding: 24px;
+      width: min(440px, 92vw);
+      color: var(--ink)
+    }
+
+    dialog::backdrop {
+      background: #16302b99
+    }
+
+    dialog label {
+      display: block;
+      margin: 10px 0 3px;
+      font-weight: 600;
+      font-size: 13px
+    }
+
+    .end {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 18px
+    }
+
+    #msg {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 16px;
+      border-radius: 6px;
+      color: #fff;
+      display: none;
+      max-width: 360px
+    }
+
+    main label {
+      display: block;
+      margin: 12px 0 3px;
+      font-weight: 600;
+      font-size: 13px
+    }
+
+    .empty {
+      padding: 24px;
+      color: #6b7c76
+    }
+
+    h2 {
+      font-size: 26px
+    }
+
+    h3 {
+      font: 700 18px 'Bricolage Grotesque', sans-serif;
+      margin: 26px 0 8px
+    }
+
+    @media(max-width:700px) {
+      body {
+        flex-direction: column
+      }
+
+      nav {
+        width: auto;
+        display: flex;
+        flex-wrap: wrap
+      }
+
+      nav small {
+        display: none
+      }
+
+      nav button {
+        width: auto
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <h1>Food<span>Dash</span></h1><a href="/" style="color:#f0a202;display:block;padding:0 8px 12px">&larr; Back to
+      website</a>
+    <div id="nav"></div>
+  </nav>
+  <main id="main"></main>
+  <div id="msg"></div>
+  <dialog id="dlg">
+    <h2 id="dt"></h2>
+    <form id="f" method="dialog">
+      <div id="fields"></div>
+      <div class="end"><button type="button" class="btn alt" onclick="dlg.close()">Cancel</button><button class="btn"
+          id="save">Save</button></div>
+    </form>
+  </dialog>
+  <script>
+    const $ = s => document.querySelector(s), dlg = $('#dlg');
+    const ENUM = {
+      user_type: ['Customer', 'Manager', 'DeliveryPartner'], current_status: ['Available', 'Busy', 'Offline'], type: ['Veg', 'NonVeg'],
+      status: ['Placed', 'Confirmed', 'Delivered', 'Cancelled'], payment_status: ['Pending', 'Paid', 'Failed'], payment_method: ['COD', 'UPI', 'Card']
+    };
+    const LABEL = {users: 'Users', restaurant: 'Restaurants', customer: 'Customers', delivery_partner: 'Delivery partners', food_item: 'Food items', orders: 'Orders', order_item: 'Order items', payment: 'Payments'};
+    const SHOW = ['restaurant', 'food_item', 'customer', 'orders'];
+    let M, cur, edit = null, rows = [];
+    const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+    async function api(u, method = 'GET', body) {
+      const r = await fetch(u, {method, headers: {'Content-Type': 'application/json'}, body: body && JSON.stringify(body)});
+      const j = await r.json(); if (!r.ok) throw new Error(j.error); return j
+    }
+    function toast(t, bad) {const m = $('#msg'); m.textContent = t; m.style.background = bad ? '#b3321f' : '#1f6f5b'; m.style.display = 'block'; setTimeout(() => m.style.display = 'none', 3500)}
+    const tbl = (cs, rs, act) => rs.length ? `<div class="wrap"><table><tr>${cs.map(c => `<th>${esc(c.replace(/_/g, ' '))}</th>`).join('')}${act ? '<th></th>' : ''}</tr>${rs.map((r, i) => `<tr>${cs.map(c => `<td>${esc(r[c])}</td>`).join('')}${act ? `<td class="acts"><button class="btn alt sm" onclick="openForm(${i})">Edit</button><button class="btn del sm" onclick="del(${i})">Delete</button></td>` : ''}</tr>`).join('')}</table></div>` : '<div class="empty">No records found.</div>';
+    function nav(on) {
+      $('#nav').innerHTML = `<button data-k="dash">Dashboard</button><button data-k="reports">Reports</button><small>Manage records</small>` + SHOW.map(t => `<button data-k="${t}">${LABEL[t]}</button>`).join('');
+      document.querySelectorAll('nav button').forEach(b => {b.onclick = () => go(b.dataset.k); b.classList.toggle('on', b.dataset.k === on)})
+    }
+    async function go(k) {nav(k); cur = k; if (k === 'dash') return dash(); if (k === 'reports') return reports(); return list()}
+    async function dash() {
+      const [s, l, t] = await Promise.all([api('/api/stats'), api('/api/report/latest'), api('/api/report/top')]);
+      $('#main').innerHTML = `<h2>Dashboard</h2><div class="stats"><div><b>${s.orders}</b>Total orders</div><div><b>${s.active}</b>Open orders</div><div><b>${s.customers}</b>Customers</div><div><b>${s.restaurants}</b>Restaurants</div><div><b>₹${Number(s.revenue).toLocaleString('en-IN')}</b>Paid revenue</div></div>
+ <h3>Latest orders</h3>${tbl(['order_no', 'customer', 'restaurant', 'partner', 'order_date', 'status', 'total_amount'], l)}
+ <h3>Top selling dishes</h3>${tbl(['dish', 'restaurant', 'qty_sold'], t)}`
+    }
+    async function reports() {
+      const [a, b] = await Promise.all([api('/api/report/restaurant'), api('/api/report/partner')]);
+      $('#main').innerHTML = `<h2>Reports</h2><h3>Revenue by restaurant (over ₹200)</h3>${tbl(['restaurant', 'orders', 'revenue'], a)}<h3>Delivery partner performance</h3>${tbl(['partner', 'status', 'deliveries'], b)}`
+    }
+    async function list(q = '') {
+      rows = await api(`/api/t/${cur}?q=${encodeURIComponent(q)}`);
+      $('#main').innerHTML = `<h2>${LABEL[cur]}</h2><div class="bar"><input id="q" type="search" placeholder="Search ${LABEL[cur].toLowerCase()}…" value="${esc(q)}"><button class="btn" onclick="list($('#q').value)">Search</button><button class="btn alt" onclick="list()">Clear</button><span style="flex:1"></span><button class="btn" onclick="openForm()">Add record</button></div>${tbl(M[cur].cols.map(c => c.name), rows, true)}`;
+      $('#q').onkeydown = e => e.key === 'Enter' && list($('#q').value)
+    }
+    function openForm(i) {
+      edit = i === undefined ? null : rows[i]; const m = M[cur], pk = m.pk;
+      $('#dt').textContent = (edit ? 'Edit ' : 'Add ') + LABEL[cur].toLowerCase().replace(/s$/, '');
+      $('#fields').innerHTML = m.cols.filter(c => !c.identity && !(c.name === 'total_amount')).map(c => {
+        const v = edit ? edit[c.name] ?? '' : '', lock = edit && pk.includes(c.name), req = c.required ? 'required' : '';
+        const input = ENUM[c.name] ? `<select name="${c.name}" ${req} ${lock ? 'disabled' : ''}><option value=""></option>${ENUM[c.name].map(o => `<option ${o === v ? 'selected' : ''}>${o}</option>`).join('')}</select>`
+          : `<input name="${c.name}" ${req} ${lock ? 'disabled' : ''} value="${esc(v)}" type="${c.type === 'date' ? 'date' : /numeric|integer/.test(c.type) ? 'number' : 'text'}" ${c.type === 'numeric' ? 'step="0.01"' : ''}>`;
+        return `<label>${c.name.replace(/_/g, ' ')}</label>${input}`
+      }).join(''); dlg.showModal()
+    }
+    $('#f').onsubmit = async e => {
+      e.preventDefault(); const b = {}; new FormData($('#f')).forEach((v, k) => b[k] = v);
+      try {
+        if (edit) await api(`/api/t/${cur}/${M[cur].pk.map(k => edit[k]).join('-')}`, 'PUT', b); else await api(`/api/t/${cur}`, 'POST', b);
+        dlg.close(); toast(edit ? 'Record updated' : 'Record added'); list()
+      } catch (x) {toast(x.message, true)}
+    };
+    async function del(i) {
+      if (!confirm('Delete this record?')) return; const r = rows[i];
+      try {await api(`/api/t/${cur}/${M[cur].pk.map(k => r[k]).join('-')}`, 'DELETE'); toast('Record deleted'); list()} catch (x) {toast(x.message, true)}
+    }
+    api('/api/meta').then(m => {M = m; go('dash')}).catch(e => $('#main').innerHTML = `<h2>Cannot reach the database</h2><p>${esc(e.message)}</p>`);
+  </script>
+</body>
+
+</html>
